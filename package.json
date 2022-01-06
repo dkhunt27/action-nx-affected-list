@@ -1,21 +1,23 @@
 {
-  "name": "typescript-action",
+  "name": "action-nx-affected-list",
   "version": "0.0.0",
-  "private": true,
-  "description": "TypeScript template action",
-  "main": "lib/main.js",
+  "description": "Github action for outputting a list of affected nx projects (apps and libs)",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.release.json",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
+    "package:del": "ncc build --source-map --license licenses.txt && find ./dist/lib -mindepth 1 ! -name text -type d -not -path '.' -exec rm -rf {} + ",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run format && npm run lint && npm test && npm run build && npm run package",
+    "npm:check": "npx npm-check",
+    "build:check": "lines=`git diff --ignore-space-at-eol dist/ | wc -l`; if [ $lines -gt 1 ]; then echo \"Detected uncommitted changes after build.  See status below:\"; diff=`git diff --ignore-space-at-eol dist/`; echo $diff; echo ''; exit 1; fi"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/actions/action-nx-affected-list.git"
   },
   "keywords": [
     "actions",
@@ -28,16 +30,20 @@
     "@actions/core": "^1.6.0"
   },
   "devDependencies": {
-    "@types/node": "^16.10.5",
-    "@typescript-eslint/parser": "^5.8.1",
-    "@vercel/ncc": "^0.31.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-github": "^4.3.2",
-    "eslint-plugin-jest": "^25.3.2",
-    "jest": "^27.2.5",
-    "js-yaml": "^4.1.0",
+    "@types/node": "^17.0.8",
+    "@typescript-eslint/parser": "^5.9.0",
+    "@vercel/ncc": "^0.33.1",
+    "eslint": "^8.6.0",
+    "eslint-plugin-github": "^4.3.5",
+    "eslint-plugin-jest": "^25.3.4",
+    "jest": "^27.4.7",
+    "npm-check-pr397": "^6.0.4",
     "prettier": "2.5.1",
     "ts-jest": "^27.1.2",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.4",
+    "yorkie": "^2.0.0"
+  },
+  "gitHooks": {
+    "pre-push": "if [[ $SKIP_HOOKS ]]; then exit 0; fi; npm run all && npm run build:check"
   }
 }
