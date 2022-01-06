@@ -19,7 +19,7 @@ outputs:
 author: 'dkhunt27'
 runs:
   using: 'node12'
-  main: 'dist/main.js'
+  main: 'dist/index.js'
 
 branding:
     color: blue
