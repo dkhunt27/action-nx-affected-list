@@ -20,13 +20,27 @@ The outputs for this action are:
 | affectedLibs | an array of affected lib names |
 | affected | an array of affected app and lib names |
 
+### Usage
+```
+      - name: Check for Affected Projects
+        uses: dkhunt27/nx-affected-list@v1
+        id: affected
+
+      - if: steps.affected.outputs.affected.length > 0
+        name: Build (Nx Affected)
+        uses: mansagroup/nrwl-nx-action@v2
+        with:
+          targets: build
+          affected: true
+          nxCloud: false
+```
 ## Making changes and pushing releases
 
-+ wait for pipelines to finish
++ wait for pipelines to finish (test will always finish with an error since this isn't a nx monorepo)
 + git checkout main
 + git pull 
-+ git tag v0.3.0
-+ SKIP_HOOKS=true git push origin v0.3.0
++ git tag v1
++ SKIP_HOOKS=true git push origin v1
 + in github, edit tag and save (this will push to marketplace)
 
 
