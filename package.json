@@ -2,7 +2,7 @@
   "name": "action-nx-affected-list",
   "version": "0.0.0",
   "description": "Github action for outputting a list of affected nx projects (apps and libs)",
-  "main": "lib/index.js",
+  "main": "lib/main.js",
   "scripts": {
     "build": "tsc -p tsconfig.release.json",
     "format": "prettier --write '**/*.ts'",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.8",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "@vercel/ncc": "^0.33.1",
     "eslint": "^8.6.0",

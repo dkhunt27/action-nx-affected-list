@@ -1,9 +1,24 @@
 # action-nx-affected-list
 Github action for outputting a list of affected nx projects (apps and libs)
 
-## Inputs
-See [action.yml](./action.yml)
+### Action inputs
 
+The possible inputs for this action are:
+
+| Parameter | Required | Default  | Description |
+| --------- | -------- | -------- | ----------- |
+| base | false | | Base of the current branch (usually main)  |
+| head | false | | Latest commit of the current branch (usually HEAD) |
+                                                                                                                                   
+### Action outputs
+
+The outputs for this action are:
+
+| Parameter | Description |
+| --------- | ----------- |
+| affectedApps | an array of affected app names |
+| affectedLibs | an array of affected lib names |
+| affected | an array of affected app and lib names |
 
 ## Making changes and pushing releases
 
@@ -19,3 +34,8 @@ See [action.yml](./action.yml)
 ```
 npm run npm:check
 ```
+
+## Acknowledgements
+Thanks to ignition-is-go which was the starting point of this code (couldn't find a published version of it)
+
+  - [ignition-is-go/action-nx-affected-apps](https://github.com/ignition-is-go/action-nx-affected-apps)
