@@ -1,18 +1,40 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import {getNxAffected} from './nx'
 
-async function run(): Promise<void> {
+export async function run(workspace = '.'): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const {GITHUB_WORKSPACE = workspace} = process.env
+    const base = core.getInput('base')
+    const head = core.getInput('head')
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    core.info(`using dir: ${GITHUB_WORKSPACE}`)
 
-    core.setOutput('time', new Date().toTimeString())
+    const apps = getNxAffected({
+      base,
+      head,
+      type: 'apps',
+      workspace: GITHUB_WORKSPACE
+    })
+    core.setOutput('affectedApps', apps.join())
+    core.info(`Affected apps: ${apps.length > 0 ? apps.join() : 'none'}`)
+
+    const libs = getNxAffected({
+      base,
+      head,
+      type: 'libs',
+      workspace: GITHUB_WORKSPACE
+    })
+    core.setOutput('affectedLibs', libs.join())
+    core.info(`Affected libs: ${libs.length > 0 ? libs.join() : 'none'}`)
+
+    const projects = apps.concat(libs)
+    core.setOutput('affected', projects.join())
+    core.info(
+      `Affected projects: ${projects.length > 0 ? projects.join() : 'none'}`
+    )
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    core.setFailed((error as any).message)
   }
 }
 

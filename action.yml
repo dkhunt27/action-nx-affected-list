@@ -1,6 +1,26 @@
 name: 'nx-affected-list'
 description: 'Github action for outputting a list of affected nx projects (apps and libs)'
+inputs:
+    base:
+        description: "Base of the current branch (usually main) "
+        required: false
+    head:
+        description: "Latest commit of the current branch (usually HEAD)"
+        required: false
+
+outputs:
+    affectedApps:
+        description: "an array of affected app names"
+    affectedLibs:
+        description: "an array of affected lib names"
+    affected:
+        description: "an array of affected app and lib names"
+
 author: 'dkhunt27'
 runs:
   using: 'node12'
   main: 'dist/index.js'
+
+branding:
+    color: blue
+    icon: "filter"
