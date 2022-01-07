@@ -5,34 +5,51 @@ Github action for outputting a list of affected nx projects (apps and libs)
 
 The possible inputs for this action are:
 
-| Parameter | Required | Default  | Description |
-| --------- | -------- | -------- | ----------- |
-| base | false | | Base of the current branch (usually main)  |
-| head | false | | Latest commit of the current branch (usually HEAD) |
+``` yaml
+inputs:
+    base:
+        description: Base of the current branch (usually main)
+        required: false
+    head:
+        description: Latest commit of the current branch (usually HEAD)
+        required: false
+```
                                                                                                                                    
 ### Action outputs
 
 The outputs for this action are:
-
-| Parameter | Description |
-| --------- | ----------- |
-| affectedApps | an array of affected app names |
-| affectedLibs | an array of affected lib names |
-| affected | an array of affected app and lib names |
+``` yaml
+outputs:
+    affectedApps:
+        description: array of affected app names
+    hasAffectedApps:
+        description: true/false if there are affected apps
+    affectedLibs:
+        description: array of affected lib names
+    hasAffectedLibs:
+        description: true/false if there are affected libs
+    affected:
+        description: array of affected projects (apps/libs) names
+    hasAffected:
+        description: true/false if there are affected projects (apps/libs)
+```
 
 ### Usage
-```
+``` yaml
       - name: Check for Affected Projects
-        uses: dkhunt27/action-nx-affected-list@v2
-        id: affected
+        uses: dkhunt27/action-nx-affected-list@v3
+        id: checkForAffected
 
-      - if: steps.affected.outputs.affected.length > 0
+      - if: steps.checkForAffected.outputs.hasAffected == 'true'
         name: Build (Nx Affected)
         uses: mansagroup/nrwl-nx-action@v2
         with:
           targets: build
           affected: true
           nxCloud: false
+
+      - if: contains(steps.checkForAffected.outputs.affected, 'someAppName')
+        ### do something specific for someAppName
 ```
 ## Making changes and pushing releases
 

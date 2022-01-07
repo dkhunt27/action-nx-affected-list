@@ -2,19 +2,25 @@ name: 'nx-affected-list'
 description: 'Github action for outputting a list of affected nx projects (apps and libs)'
 inputs:
     base:
-        description: "Base of the current branch (usually main) "
+        description: Base of the current branch (usually main)
         required: false
     head:
-        description: "Latest commit of the current branch (usually HEAD)"
+        description: Latest commit of the current branch (usually HEAD)
         required: false
 
 outputs:
     affectedApps:
-        description: "an array of affected app names"
+        description: array of affected app names
+    hasAffectedApps:
+        description: true/false if there are affected apps
     affectedLibs:
-        description: "an array of affected lib names"
+        description: array of affected lib names
+    hasAffectedLibs:
+        description: true/false if there are affected libs
     affected:
-        description: "an array of affected app and lib names"
+        description: array of affected projects (apps/libs) names
+    hasAffected:
+        description: true/false if there are affected projects (apps/libs)
 
 author: 'dkhunt27'
 runs:
