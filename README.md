@@ -53,9 +53,10 @@ outputs:
 ```
 ## Making changes and pushing releases
 
-+ make changes
++ make new branch and make changes
 + npm run all
 + git commit/push changes
++ make PR back to main
 + wait for pipelines to finish (test will always finish with an error since this isn't a nx monorepo)
 + git checkout main
 + git pull 
