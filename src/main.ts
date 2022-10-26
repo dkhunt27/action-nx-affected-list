@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import {getNxAffected} from './nx'
 
+// dummy
 export async function run(workspace = '.'): Promise<void> {
   try {
     const {GITHUB_WORKSPACE = workspace} = process.env
