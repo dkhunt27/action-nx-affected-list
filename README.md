@@ -37,7 +37,7 @@ outputs:
 ### Usage
 ``` yaml
       - name: Check for Affected Projects
-        uses: dkhunt27/action-nx-affected-list@v3
+        uses: dkhunt27/action-nx-affected-list@v4
         id: checkForAffected
 
       - if: steps.checkForAffected.outputs.hasAffected == 'true'
@@ -53,6 +53,9 @@ outputs:
 ```
 ## Making changes and pushing releases
 
++ make changes
++ npm run all
++ git commit/push changes
 + wait for pipelines to finish (test will always finish with an error since this isn't a nx monorepo)
 + git checkout main
 + git pull 
