@@ -53,16 +53,16 @@ outputs:
 ```
 ## Making changes and pushing releases
 
-+ make new branch and make changes
-+ `npm run all`
-+ `git commit/push changes`
-+ make PR back to main
-+ wait for pipelines to finish (test will always finish with an error since this isn't a nx monorepo)
-+ `git checkout main`
-+ `git pull`
-+ `git tag v1`
-+ `SKIP_HOOKS=true git push origin v1`
-+ in github, edit tag and save (this will push to marketplace)
+- make new branch and make changes
+- `npm run all`
+- `git commit/push changes`
+- make PR back to main
+- wait for pipelines to finish (test will always finish with an error since this isn't a nx monorepo)
+- `git checkout main`
+- `git pull`
+- `git tag v1`
+- `SKIP_HOOKS=true git push origin v1`
+- in github, edit tag and save (this will push to marketplace)
 
 
 ## NPM Check
