@@ -12,7 +12,7 @@ export async function run(workspace = '.'): Promise<void> {
     const apps = getNxAffected({
       base,
       head,
-      type: 'apps',
+      type: 'app',
       workspace: GITHUB_WORKSPACE
     })
     core.setOutput('affectedApps', apps)
@@ -22,7 +22,7 @@ export async function run(workspace = '.'): Promise<void> {
     const libs = getNxAffected({
       base,
       head,
-      type: 'libs',
+      type: 'lib',
       workspace: GITHUB_WORKSPACE
     })
     core.setOutput('affectedLibs', libs)
