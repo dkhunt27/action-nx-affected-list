@@ -1,3 +1,5 @@
+.nx/
+
 # Dependency directory
 node_modules
 

@@ -9,14 +9,6 @@ inputs:
         required: false
 
 outputs:
-    affectedApps:
-        description: array of affected app names
-    hasAffectedApps:
-        description: true/false if there are affected apps
-    affectedLibs:
-        description: array of affected lib names
-    hasAffectedLibs:
-        description: true/false if there are affected libs
     affected:
         description: array of affected projects (apps/libs) names
     hasAffected:
