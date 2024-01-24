@@ -50,7 +50,7 @@ outputs:
 ## Making changes and pushing releases
 
 - make new branch and make changes
-- `npm run all`
+- `yarn all`
 - `git commit/push changes`
 - make PR back to main
 - wait for pipelines to finish (test will always finish with an error since this isn't a nx monorepo)
@@ -63,7 +63,7 @@ outputs:
 ## NPM Check
 
 ```bash
-npm run npm:check
+yarn npm:check
 ```
 
 ## Acknowledgements
