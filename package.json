@@ -4,7 +4,6 @@
   "description": "Github action for outputting a list of affected nx projects (apps and libs)",
   "main": "lib/main.js",
   "scripts": {
-    "nx": "nx",
     "build": "tsc -p tsconfig.release.json",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",

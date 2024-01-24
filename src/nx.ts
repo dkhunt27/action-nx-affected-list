@@ -9,18 +9,27 @@ const executeNxCommands = ({
   let cmdSuccessful = false
   let result: string | null = null
 
-  result = execSync('ls -la', {cwd: workspace}).toString()
-  core.info(`result: ${result}`)
-  result = execSync('ls -la', {cwd: `${workspace}/node_modules`}).toString()
-  core.info(`result: ${result}`)
   result = execSync('ls -la', {
-    cwd: `${workspace}/node_modules/.bin`
+    cwd: `${workspace}/.nx/cache`
   }).toString()
-  core.info(`result: ${result}`)
+  core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`)
+
   result = execSync('ls -la', {
-    cwd: `${workspace}/node_modules/nx`
+    cwd: `/home/runner/work/rkt-artemis/rkt-artemis/node_modules/.bin`
   }).toString()
-  core.info(`result: ${result}`)
+  core.info(
+    `/home/runner/work/rkt-artemis/rkt-artemis/node_modules/.bin: ${result}`
+  )
+
+  result = execSync('yarn nx --version', {
+    cwd: `/home/runner/work/rkt-artemis/rkt-artemis`
+  }).toString()
+  core.info(`yarn nx --version: ${result}`)
+
+  result = execSync('npm run nx --version', {
+    cwd: `/home/runner/work/rkt-artemis/rkt-artemis`
+  }).toString()
+  core.info(`npm run nx --version: ${result}`)
 
   for (const cmd of commands) {
     try {
@@ -51,6 +60,8 @@ export function getNxAffected({
   const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ' --select=projects'}`
   const commands = [
     `./node_modules/.bin/nx print-affected --plain ${args}`,
+    `yarn nx print-affected --plain ${args}`,
+    `npm run nx print-affected --plain ${args}`,
     `nx print-affected --plain ${args}`,
     `npx nx print-affected --plain ${args}`
   ]

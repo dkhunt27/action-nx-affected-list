@@ -105,18 +105,22 @@ const child_process_1 = __nccwpck_require__(2081);
 const executeNxCommands = ({ commands, workspace }) => {
     let cmdSuccessful = false;
     let result = null;
-    result = (0, child_process_1.execSync)('ls -la', { cwd: workspace }).toString();
-    core.info(`result: ${result}`);
-    result = (0, child_process_1.execSync)('ls -la', { cwd: `${workspace}/node_modules` }).toString();
-    core.info(`result: ${result}`);
     result = (0, child_process_1.execSync)('ls -la', {
-        cwd: `${workspace}/node_modules/.bin`
+        cwd: `${workspace}/.nx/cache`
     }).toString();
-    core.info(`result: ${result}`);
+    core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
     result = (0, child_process_1.execSync)('ls -la', {
-        cwd: `${workspace}/node_modules/nx`
+        cwd: `/home/runner/work/rkt-artemis/rkt-artemis/node_modules/.bin`
     }).toString();
-    core.info(`result: ${result}`);
+    core.info(`/home/runner/work/rkt-artemis/rkt-artemis/node_modules/.bin: ${result}`);
+    result = (0, child_process_1.execSync)('yarn nx --version', {
+        cwd: `/home/runner/work/rkt-artemis/rkt-artemis`
+    }).toString();
+    core.info(`yarn nx --version: ${result}`);
+    result = (0, child_process_1.execSync)('npm run nx --version', {
+        cwd: `/home/runner/work/rkt-artemis/rkt-artemis`
+    }).toString();
+    core.info(`npm run nx --version: ${result}`);
     for (const cmd of commands) {
         try {
             core.debug(`Attempting to run command: ${cmd}`);
@@ -138,6 +142,8 @@ function getNxAffected({ base, head, workspace }) {
     const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ' --select=projects'}`;
     const commands = [
         `./node_modules/.bin/nx print-affected --plain ${args}`,
+        `yarn nx print-affected --plain ${args}`,
+        `npm run nx print-affected --plain ${args}`,
         `nx print-affected --plain ${args}`,
         `npx nx print-affected --plain ${args}`
     ];
