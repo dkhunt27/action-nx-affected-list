@@ -38,7 +38,8 @@ export function getNxAffected({
   const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ' --select=projects'}`
   const commands = [
     `./node_modules/.bin/nx print-affected --plain ${args}`,
-    `nx print-affected --plain ${args}`
+    `nx print-affected --plain ${args}`,
+    `npx nx print-affected --plain ${args}`
   ]
   const result = executeNxCommands({commands, workspace})
 
