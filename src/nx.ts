@@ -9,6 +9,19 @@ const executeNxCommands = ({
   let cmdSuccessful = false
   let result: string | null = null
 
+  result = execSync('ls -la', {cwd: workspace}).toString()
+  core.info(`result: ${result}`)
+  result = execSync('ls -la', {cwd: `${workspace}/node_modules`}).toString()
+  core.info(`result: ${result}`)
+  result = execSync('ls -la', {
+    cwd: `${workspace}/node_modules/.bin`
+  }).toString()
+  core.info(`result: ${result}`)
+  result = execSync('ls -la', {
+    cwd: `${workspace}/node_modules/nx`
+  }).toString()
+  core.info(`result: ${result}`)
+
   for (const cmd of commands) {
     try {
       core.debug(`Attempting to run command: ${cmd}`)

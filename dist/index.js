@@ -105,6 +105,18 @@ const child_process_1 = __nccwpck_require__(2081);
 const executeNxCommands = ({ commands, workspace }) => {
     let cmdSuccessful = false;
     let result = null;
+    result = (0, child_process_1.execSync)('ls -la', { cwd: workspace }).toString();
+    core.info(`result: ${result}`);
+    result = (0, child_process_1.execSync)('ls -la', { cwd: `${workspace}/node_modules` }).toString();
+    core.info(`result: ${result}`);
+    result = (0, child_process_1.execSync)('ls -la', {
+        cwd: `${workspace}/node_modules/.bin`
+    }).toString();
+    core.info(`result: ${result}`);
+    result = (0, child_process_1.execSync)('ls -la', {
+        cwd: `${workspace}/node_modules/nx`
+    }).toString();
+    core.info(`result: ${result}`);
     for (const cmd of commands) {
         try {
             core.debug(`Attempting to run command: ${cmd}`);
