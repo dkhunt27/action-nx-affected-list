@@ -152,12 +152,10 @@ function prepNx({ workspace }) {
 }
 exports.prepNx = prepNx;
 function getNxAffected({ base, head, workspace }) {
-    const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ' --select=projects'}`;
+    const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ''}`;
     const commands = [
-        `./node_modules/.bin/nx print-affected ${args}`,
-        `yarn nx print-affected ${args}`
-        // `nx print-affected ${args}`,
-        // `npx nx print-affected ${args}`
+        `./node_modules/.bin/nx show projects --affected ${args}`,
+        `yarn nx show projects --affected ${args}`
     ];
     const result = executeNxCommandsUntilSuccessful({ commands, workspace });
     if (!result) {
@@ -165,7 +163,7 @@ function getNxAffected({ base, head, workspace }) {
         return [];
     }
     const affected = result
-        .split(', ')
+        .split(' ')
         .map(x => x.trim())
         .filter(x => x.length > 0);
     return affected || [];
