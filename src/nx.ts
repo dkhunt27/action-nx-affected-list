@@ -63,7 +63,11 @@ const executeNxCommands = ({
 
 export function prepNx({workspace}: GetNxAffectedProps): string[] {
   const commands = [
+    `npm list --global nx`,
+    `yarn global list nx`,
+    `pnpm list --global nx`,
     `./node_modules/.bin/nx --version`,
+    `./node_modules/.bin/nx reset`,
     `./node_modules/.bin/nx show projects`
     // `nx --version`,
     // `npx nx --version`
