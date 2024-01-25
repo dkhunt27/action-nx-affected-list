@@ -108,21 +108,17 @@ const child_process_1 = __nccwpck_require__(2081);
 const executeNxCommandsUntilSuccessful = ({ commands, workspace }) => {
     let cmdSuccessful = false;
     let result = null;
-    result = (0, child_process_1.execSync)('ls -la', {
-        cwd: `${workspace}/.nx/cache`
-    }).toString();
-    core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
     for (const cmd of commands) {
         try {
-            core.info(`Attempting to run command: ${cmd}`);
+            core.debug(`Attempting to run command: ${cmd}`);
             result = (0, child_process_1.execSync)(cmd, { cwd: workspace }).toString();
-            core.info(`Command Result: ${result}`);
+            core.debug(`Command Result: ${result}`);
             cmdSuccessful = true;
             break;
         }
         catch (err) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            core.info(`Command failed: ${err.message}`);
+            core.error(`Command "${cmd}" failed: ${err.message}`);
         }
     }
     if (!cmdSuccessful) {
@@ -132,44 +128,27 @@ const executeNxCommandsUntilSuccessful = ({ commands, workspace }) => {
 };
 const executeNxCommands = ({ commands, workspace }) => {
     let result = null;
-    result = (0, child_process_1.execSync)('ls -la', {
-        cwd: `${workspace}/.nx/cache`
-    }).toString();
-    core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
     for (const cmd of commands) {
         try {
-            core.info(`Attempting to run command: ${cmd}`);
+            core.debug(`Attempting to run command: ${cmd}`);
             result = (0, child_process_1.execSync)(cmd, { cwd: workspace }).toString();
-            core.info(`Command Result: ${result}`);
+            core.debug(`Command Result: ${result}`);
         }
         catch (err) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            core.info(`Command failed: ${err.message}`);
+            core.error(`Command "${cmd}" failed: ${err.message}`);
         }
     }
     return result;
 };
 function prepNx({ workspace }) {
     const commands = [
-        `npm list --global nx`,
-        `yarn global list nx`,
-        `pnpm list --global nx`,
         `./node_modules/.bin/nx --version`,
-        `./node_modules/.bin/nx reset`,
-        `./node_modules/.bin/nx show projects`
-        // `nx --version`,
-        // `npx nx --version`
+        // running nx reset to ensure we have a clean state
+        // this resolved "CreateNodesError: Unable to create nodes for yarn.lock using plugin nx-js-graph-plugin."
+        `./node_modules/.bin/nx reset`
     ];
-    const result = executeNxCommands({ commands, workspace });
-    if (!result) {
-        core.info('Looks like no changes were found...');
-        return [];
-    }
-    const affected = result
-        .split(', ')
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
-    return affected || [];
+    executeNxCommands({ commands, workspace });
 }
 exports.prepNx = prepNx;
 function getNxAffected({ base, head, workspace }) {

@@ -5,7 +5,7 @@ test('fake test for now', () => {
   expect(true).toBeTruthy()
 })
 
-test.skip('nx getAffected', () => {
+test('nx getAffected', () => {
   const actual = getNxAffected({workspace: '.'})
   expect(actual).toEqual([])
 })
