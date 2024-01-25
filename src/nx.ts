@@ -14,11 +14,6 @@ const executeNxCommandsUntilSuccessful = ({
   }).toString()
   core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`)
 
-  // result = execSync('npm run nx --version', {
-  //   cwd: workspace
-  // }).toString()
-  // core.info(`npm run nx --version: ${result}`)
-
   for (const cmd of commands) {
     try {
       core.info(`Attempting to run command: ${cmd}`)
@@ -52,16 +47,6 @@ const executeNxCommands = ({
   }).toString()
   core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`)
 
-  result = execSync('yarn nx --version', {
-    cwd: workspace
-  }).toString()
-  core.info(`yarn nx --version: ${result}`)
-
-  // result = execSync('npm run nx --version', {
-  //   cwd: workspace
-  // }).toString()
-  // core.info(`npm run nx --version: ${result}`)
-
   for (const cmd of commands) {
     try {
       core.info(`Attempting to run command: ${cmd}`)
@@ -76,10 +61,10 @@ const executeNxCommands = ({
   return result
 }
 
-export function getNxVersion({workspace}: GetNxAffectedProps): string[] {
+export function prepNx({workspace}: GetNxAffectedProps): string[] {
   const commands = [
     `./node_modules/.bin/nx --version`,
-    `yarn nx --version`
+    `./node_modules/.bin/nx show projects`
     // `nx --version`,
     // `npx nx --version`
   ]

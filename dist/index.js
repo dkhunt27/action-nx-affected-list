@@ -49,7 +49,7 @@ function run(workspace = '.') {
             const base = core.getInput('base');
             const head = core.getInput('head');
             core.info(`using dir: ${GITHUB_WORKSPACE}`);
-            (0, nx_1.getNxVersion)({
+            (0, nx_1.prepNx)({
                 workspace: GITHUB_WORKSPACE
             });
             const affected = (0, nx_1.getNxAffected)({
@@ -102,7 +102,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getNxAffected = exports.getNxVersion = void 0;
+exports.getNxAffected = exports.prepNx = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const executeNxCommandsUntilSuccessful = ({ commands, workspace }) => {
@@ -112,10 +112,6 @@ const executeNxCommandsUntilSuccessful = ({ commands, workspace }) => {
         cwd: `${workspace}/.nx/cache`
     }).toString();
     core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
-    // result = execSync('npm run nx --version', {
-    //   cwd: workspace
-    // }).toString()
-    // core.info(`npm run nx --version: ${result}`)
     for (const cmd of commands) {
         try {
             core.info(`Attempting to run command: ${cmd}`);
@@ -140,14 +136,6 @@ const executeNxCommands = ({ commands, workspace }) => {
         cwd: `${workspace}/.nx/cache`
     }).toString();
     core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
-    result = (0, child_process_1.execSync)('yarn nx --version', {
-        cwd: workspace
-    }).toString();
-    core.info(`yarn nx --version: ${result}`);
-    // result = execSync('npm run nx --version', {
-    //   cwd: workspace
-    // }).toString()
-    // core.info(`npm run nx --version: ${result}`)
     for (const cmd of commands) {
         try {
             core.info(`Attempting to run command: ${cmd}`);
@@ -161,10 +149,10 @@ const executeNxCommands = ({ commands, workspace }) => {
     }
     return result;
 };
-function getNxVersion({ workspace }) {
+function prepNx({ workspace }) {
     const commands = [
         `./node_modules/.bin/nx --version`,
-        `yarn nx --version`
+        `./node_modules/.bin/nx show projects`
         // `nx --version`,
         // `npx nx --version`
     ];
@@ -179,7 +167,7 @@ function getNxVersion({ workspace }) {
         .filter(x => x.length > 0);
     return affected || [];
 }
-exports.getNxVersion = getNxVersion;
+exports.prepNx = prepNx;
 function getNxAffected({ base, head, workspace }) {
     const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ' --select=projects'}`;
     const commands = [

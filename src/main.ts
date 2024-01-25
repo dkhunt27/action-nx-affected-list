@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {getNxAffected, getNxVersion} from './nx'
+import {getNxAffected, prepNx} from './nx'
 
 export async function run(workspace = '.'): Promise<void> {
   try {
@@ -9,7 +9,7 @@ export async function run(workspace = '.'): Promise<void> {
 
     core.info(`using dir: ${GITHUB_WORKSPACE}`)
 
-    getNxVersion({
+    prepNx({
       workspace: GITHUB_WORKSPACE
     })
 
