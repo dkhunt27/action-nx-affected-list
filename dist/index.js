@@ -49,6 +49,9 @@ function run(workspace = '.') {
             const base = core.getInput('base');
             const head = core.getInput('head');
             core.info(`using dir: ${GITHUB_WORKSPACE}`);
+            (0, nx_1.getNxVersion)({
+                workspace: GITHUB_WORKSPACE
+            });
             const affected = (0, nx_1.getNxAffected)({
                 base,
                 head,
@@ -99,38 +102,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getNxAffected = void 0;
+exports.getNxAffected = exports.getNxVersion = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
-const executeNxCommands = ({ commands, workspace }) => {
+const executeNxCommandsUntilSuccessful = ({ commands, workspace }) => {
     let cmdSuccessful = false;
     let result = null;
     result = (0, child_process_1.execSync)('ls -la', {
         cwd: `${workspace}/.nx/cache`
     }).toString();
     core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
-    result = (0, child_process_1.execSync)('ls -la', {
-        cwd: `/home/runner/work/rkt-artemis/rkt-artemis/node_modules/.bin`
-    }).toString();
-    core.info(`/home/runner/work/rkt-artemis/rkt-artemis/node_modules/.bin: ${result}`);
-    result = (0, child_process_1.execSync)('yarn nx --version', {
-        cwd: `/home/runner/work/rkt-artemis/rkt-artemis`
-    }).toString();
-    core.info(`yarn nx --version: ${result}`);
-    result = (0, child_process_1.execSync)('npm run nx --version', {
-        cwd: `/home/runner/work/rkt-artemis/rkt-artemis`
-    }).toString();
-    core.info(`npm run nx --version: ${result}`);
+    // result = execSync('npm run nx --version', {
+    //   cwd: workspace
+    // }).toString()
+    // core.info(`npm run nx --version: ${result}`)
     for (const cmd of commands) {
         try {
-            core.debug(`Attempting to run command: ${cmd}`);
+            core.info(`Attempting to run command: ${cmd}`);
             result = (0, child_process_1.execSync)(cmd, { cwd: workspace }).toString();
+            core.info(`Command Result: ${result}`);
             cmdSuccessful = true;
             break;
         }
         catch (err) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            core.debug(`Command failed: ${err.message}`);
+            core.info(`Command failed: ${err.message}`);
         }
     }
     if (!cmdSuccessful) {
@@ -138,14 +134,61 @@ const executeNxCommands = ({ commands, workspace }) => {
     }
     return result;
 };
+const executeNxCommands = ({ commands, workspace }) => {
+    let result = null;
+    result = (0, child_process_1.execSync)('ls -la', {
+        cwd: `${workspace}/.nx/cache`
+    }).toString();
+    core.info(`/home/runner/work/rkt-artemis/rkt-artemis/.nx/cache: ${result}`);
+    result = (0, child_process_1.execSync)('yarn nx --version', {
+        cwd: workspace
+    }).toString();
+    core.info(`yarn nx --version: ${result}`);
+    // result = execSync('npm run nx --version', {
+    //   cwd: workspace
+    // }).toString()
+    // core.info(`npm run nx --version: ${result}`)
+    for (const cmd of commands) {
+        try {
+            core.info(`Attempting to run command: ${cmd}`);
+            result = (0, child_process_1.execSync)(cmd, { cwd: workspace }).toString();
+            core.info(`Command Result: ${result}`);
+        }
+        catch (err) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            core.info(`Command failed: ${err.message}`);
+        }
+    }
+    return result;
+};
+function getNxVersion({ workspace }) {
+    const commands = [
+        `./node_modules/.bin/nx --version`,
+        `yarn nx --version`
+        // `nx --version`,
+        // `npx nx --version`
+    ];
+    const result = executeNxCommands({ commands, workspace });
+    if (!result) {
+        core.info('Looks like no changes were found...');
+        return [];
+    }
+    const affected = result
+        .split(', ')
+        .map(x => x.trim())
+        .filter(x => x.length > 0);
+    return affected || [];
+}
+exports.getNxVersion = getNxVersion;
 function getNxAffected({ base, head, workspace }) {
     const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ' --select=projects'}`;
     const commands = [
-        `yarn nx print-affected --plain ${args}`,
-        `nx print-affected --plain ${args}`,
-        `npx nx print-affected --plain ${args}`
+        `./node_modules/.bin/nx print-affected ${args}`,
+        `yarn nx print-affected ${args}`
+        // `nx print-affected ${args}`,
+        // `npx nx print-affected ${args}`
     ];
-    const result = executeNxCommands({ commands, workspace });
+    const result = executeNxCommandsUntilSuccessful({ commands, workspace });
     if (!result) {
         core.info('Looks like no changes were found...');
         return [];
