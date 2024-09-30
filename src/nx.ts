@@ -95,7 +95,7 @@ export function parseAffected(params: {
   const toIgnore = affectedToIgnore ? affectedToIgnore.split(',') : []
 
   const affected = result
-    .split(' ')
+    .split(/\s+/) // split on any whitespace including newlines
     .map(x => x.trim())
     .filter(x => !toIgnore.includes(x))
     .filter(x => x.length > 0)

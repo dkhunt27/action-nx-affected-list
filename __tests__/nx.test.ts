@@ -16,14 +16,19 @@ test('parseAffected single', () => {
   expect(actual).toEqual(['project1'])
 })
 
-test('parseAffected multiple', () => {
+test('parseAffected multiple space', () => {
   const actual = parseAffected({result: 'project1 project2 project3'})
+  expect(actual).toEqual(['project1', 'project2', 'project3'])
+})
+
+test('parseAffected multiple newline', () => {
+  const actual = parseAffected({result: 'project1\nproject2\nproject3'})
   expect(actual).toEqual(['project1', 'project2', 'project3'])
 })
 
 test('parseAffected multiple with ignore not found', () => {
   const actual = parseAffected({
-    result: 'project1 project2 project3',
+    result: 'project1\nproject2\nproject3',
     affectedToIgnore: 'project4'
   })
   expect(actual).toEqual(['project1', 'project2', 'project3'])
@@ -31,7 +36,7 @@ test('parseAffected multiple with ignore not found', () => {
 
 test('parseAffected multiple with ignore found', () => {
   const actual = parseAffected({
-    result: 'project1 project2 project3',
+    result: 'project1\nproject2\nproject3',
     affectedToIgnore: 'project3,project2'
   })
   expect(actual).toEqual(['project1'])
@@ -39,7 +44,7 @@ test('parseAffected multiple with ignore found', () => {
 
 test('parseAffected multiple with ignore found all', () => {
   const actual = parseAffected({
-    result: 'project1 project2 project3',
+    result: 'project1\nproject2\nproject3',
     affectedToIgnore: 'project3,project1,project2'
   })
   expect(actual).toEqual([])
