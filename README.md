@@ -14,6 +14,9 @@ inputs:
     head:
         description: Latest commit of the current branch (usually HEAD)
         required: false
+    affectedToIgnore:
+        description:  List of projects to ignore (comma separated; no spaces)
+        required: false
 ```
 
 ## Action outputs
