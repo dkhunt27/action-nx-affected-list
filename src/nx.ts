@@ -64,6 +64,7 @@ export function prepNx({workspace}: GetNxAffectedProps): void {
 export function getNxAffected({
   base,
   head,
+  affectedToIgnore,
   workspace
 }: GetNxAffectedProps): string[] {
   const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ''}`
@@ -73,14 +74,30 @@ export function getNxAffected({
   ]
   const result = executeNxCommandsUntilSuccessful({commands, workspace})
 
+  const affected = parseAffected({result, affectedToIgnore})
+
+  return affected || []
+}
+
+export function parseAffected(params: {
+  result: string | null
+  affectedToIgnore?: string
+}): string[] {
+  const {result, affectedToIgnore} = params
+
   if (!result) {
     core.info('Looks like no changes were found...')
     return []
   }
 
+  core.info(`Parsing affected: ${result}`)
+
+  const toIgnore = affectedToIgnore ? affectedToIgnore.split(',') : []
+
   const affected = result
     .split(' ')
     .map(x => x.trim())
+    .filter(x => !toIgnore.includes(x))
     .filter(x => x.length > 0)
 
   return affected || []

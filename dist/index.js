@@ -48,6 +48,7 @@ function run(workspace = '.') {
             const { GITHUB_WORKSPACE = workspace } = process.env;
             const base = core.getInput('base');
             const head = core.getInput('head');
+            const affectedToIgnore = core.getInput('affectedToIgnore');
             core.info(`using dir: ${GITHUB_WORKSPACE}`);
             (0, nx_1.prepNx)({
                 workspace: GITHUB_WORKSPACE
@@ -55,6 +56,7 @@ function run(workspace = '.') {
             const affected = (0, nx_1.getNxAffected)({
                 base,
                 head,
+                affectedToIgnore,
                 workspace: GITHUB_WORKSPACE
             });
             core.setOutput('affected', affected);
@@ -102,7 +104,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getNxAffected = exports.prepNx = void 0;
+exports.parseAffected = exports.getNxAffected = exports.prepNx = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const executeNxCommandsUntilSuccessful = ({ commands, workspace }) => {
@@ -151,24 +153,33 @@ function prepNx({ workspace }) {
     executeNxCommands({ commands, workspace });
 }
 exports.prepNx = prepNx;
-function getNxAffected({ base, head, workspace }) {
+function getNxAffected({ base, head, affectedToIgnore, workspace }) {
     const args = `${base ? `--base=${base}` : ''} ${head ? `--head=${head}` : ''}`;
     const commands = [
         `./node_modules/.bin/nx show projects --affected ${args}`,
         `yarn nx show projects --affected ${args}`
     ];
     const result = executeNxCommandsUntilSuccessful({ commands, workspace });
+    const affected = parseAffected({ result, affectedToIgnore });
+    return affected || [];
+}
+exports.getNxAffected = getNxAffected;
+function parseAffected(params) {
+    const { result, affectedToIgnore } = params;
     if (!result) {
         core.info('Looks like no changes were found...');
         return [];
     }
+    core.info(`Parsing affected: ${result}`);
+    const toIgnore = affectedToIgnore ? affectedToIgnore.split(',') : [];
     const affected = result
         .split(' ')
         .map(x => x.trim())
+        .filter(x => !toIgnore.includes(x))
         .filter(x => x.length > 0);
     return affected || [];
 }
-exports.getNxAffected = getNxAffected;
+exports.parseAffected = parseAffected;
 
 
 /***/ }),

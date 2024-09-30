@@ -6,6 +6,7 @@ export async function run(workspace = '.'): Promise<void> {
     const {GITHUB_WORKSPACE = workspace} = process.env
     const base = core.getInput('base')
     const head = core.getInput('head')
+    const affectedToIgnore = core.getInput('affectedToIgnore')
 
     core.info(`using dir: ${GITHUB_WORKSPACE}`)
 
@@ -16,6 +17,7 @@ export async function run(workspace = '.'): Promise<void> {
     const affected = getNxAffected({
       base,
       head,
+      affectedToIgnore,
       workspace: GITHUB_WORKSPACE
     })
     core.setOutput('affected', affected)
